@@ -774,14 +774,82 @@ testers are expected to do more *exploratory* testing.
 
 ### Hiding and revealing contacts
 
-1. Hiding contacts
-   2. ?
-3. Revealing contacts
-   4. ?
+The syntax for both hiding and revealing contacts is analogous, so testers can use similar command formats to verify that the contacts’ sensitive details are either concealed or restored.
+
+
+1. Hiding all contacts
+    1. Test case: `hide all`<br>
+      Expected: All contacts’ details (e.g., phone numbers, emails, addresses, etc.) should be hidden from the contact list view. Only minimal information (like names) is visible.<br>
+
+
+2. Hiding a specific contact by index
+   1. Prerequisite: Have at least one contact in the FinClient
+   2. Test case: `hide 1`<br>
+       Expected: The contact at index 1 is hidden. The contact list should reflect this change.<br>
+
+
+3. Hiding contacts by matching name keywords
+   1. Prerequisite: There should be contacts whose names include “alice” or “bob”.
+   2. Test case: `hide alice`<br>
+      Expected: All contacts with names matching the keyword "alice" are hidden. The contact list should reflect this change.
+
+
+4. Revealing all contacts
+   1. Test case: `reveal all`<br>
+      Expected: All hidden contacts’ details are revealed in the contact list view.
+
+
+5. Revealing a specific contact by index 
+   1. Prerequisite: Have at least two contacts in the FinClient and the second one is hidden.
+   2. Test case: `reveal 2`<br>
+      Expected: The contact at index 2 is revealed. The contact list should reflect this change.
+
+
+6. Revealing contacts by matching name keywords
+   1. Prerequisite: There should be contacts whose names include “charlie”.
+   2. Test case: `reveal charlie`<br>
+      Expected: All contacts with names matching the keyword "charlie" are revealed. The contact list should reflect this change.
+
 
 ### Limit Orders & Call Auction Calculator
 
-1. ?
+This feature gathers all limit price orders to determine the call auction clearing price. Below are concrete examples for six contacts with corresponding order commands and an explanation of the expected outcome.
+
+1. Sample Orders for 6 Contacts
+   1. Prerequisite: Have at least six contacts in FinClient. Besides the six contacts, other contacts have no orders.
+   2. Test case: 
+      ```
+      order 1 o/BUY am/100 at/10.00
+      order 2 o/BUY am/150 at/10.00
+      order 3 o/SELL am/120 at/10.20
+      order 4 o/SELL am/130 at/10.00
+      order 5 o/BUY am/80 at/10.10
+      order 6 o/SELL am/100 at/9.90
+      ```
+        Expected: The orders are successfully added to the respective contacts. The call auction clearing price is calculated based on the aggregated orders.
+   3. Expected Call Auction Clearing Price Calculation
+      1. Aggregated BUY Orders:
+        - Person 1: 100 shares at 10.00
+        - Person 2: 150 shares at 10.00
+        - Person 5: 80 shares at 10.10
+        - Total Buy Volume: 330 shares (only orders with a limit price ≥ clearing price will be valid)
+      2. Aggregated SELL Orders:
+        - Person 3: 120 shares at 10.20 (only valid if the clearing price is ≥ 10.20, which may not be optimal)
+        - Person 4: 130 shares at 10.00
+        - Person 6: 100 shares at 9.90
+        - Total Sell Volume (at clearing price = 10.00):
+          - Person 4: 130 shares (10.00 ≤ 10.00)
+          - Person 6: 100 shares (9.90 ≤ 10.00)
+          - Total: 230 shares
+      3. Clearing Price Determination:
+        When evaluating candidate prices:
+        - At 10.00:
+          - Valid BUY orders: Persons 1, 2, and 5 (all with prices ≥ 10.00) contribute a total of 330 shares.
+          - Valid SELL orders: Persons 4 and 6 (with prices ≤ 10.00) contribute a total of 230 shares.
+          - Executed Volume: The trade can occur for min(330, 230) = 230 shares.
+        - At other candidate prices (for example, 9.90 or 10.10), the executed volume is lower.
+      4. Final Expected Outcome:
+      The system should calculate the call auction clearing price as 10.00 with an executed trade volume of 230 shares. The status message should confirm that the order was generated successfully and reflect this clearing price calculation.
 
 ### Sorting Contacts
 
