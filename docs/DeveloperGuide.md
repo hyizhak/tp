@@ -779,37 +779,37 @@ The syntax for both hiding and revealing contacts is analogous, so testers can u
 
 1. Hiding all contacts
     1. Test case: `hide all`<br>
-      Expected: All contacts’ details (e.g., phone numbers, emails, addresses, etc.) should be hidden from the contact list view. Only minimal information (like names) is visible.<br>
-
+      Expected: All contacts’ details (e.g., phone numbers, emails, addresses, etc.) should be hidden from the contact list view. Only minimal information (like names) is visible.
+<br><br>
 
 2. Hiding a specific contact by index
    1. Prerequisite: Have at least one contact in the FinClient
    2. Test case: `hide 1`<br>
-       Expected: The contact at index 1 is hidden. The contact list should reflect this change.<br>
-
+       Expected: The contact at index 1 is hidden. The contact list should reflect this change.
+<br><br>
 
 3. Hiding contacts by matching name keywords
    1. Prerequisite: There should be contacts whose names include “alice” or “bob”.
-   2. Test case: `hide alice`<br>
-      Expected: All contacts with names matching the keyword "alice" are hidden. The contact list should reflect this change.
-
+   2. Test case: `hide alice bob`<br>
+      Expected: All contacts with names matching the keyword "alice" or "bob" are hidden. The contact list should reflect this change.
+<br><br>
 
 4. Revealing all contacts
    1. Test case: `reveal all`<br>
       Expected: All hidden contacts’ details are revealed in the contact list view.
-
+<br><br>
 
 5. Revealing a specific contact by index 
    1. Prerequisite: Have at least two contacts in the FinClient and the second one is hidden.
    2. Test case: `reveal 2`<br>
       Expected: The contact at index 2 is revealed. The contact list should reflect this change.
-
+<br><br>
 
 6. Revealing contacts by matching name keywords
    1. Prerequisite: There should be contacts whose names include “charlie”.
    2. Test case: `reveal charlie`<br>
       Expected: All contacts with names matching the keyword "charlie" are revealed. The contact list should reflect this change.
-
+<br><br>
 
 ### Limit Orders & Call Auction Calculator
 
